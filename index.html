@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Q3eSE_RW4_U01_Reading1</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      font-size: larger;
+      font-weight: bold;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding: 1em;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    main {
+      max-width: 600px;
+      background: white;
+      padding: 1.5em;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    button {
+      background: none;
+      border: 2px solid #0078d4;
+      color: #0078d4;
+      font-size: 20px;
+      margin: 5px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover:not(:disabled) {
+      background-color: #0078d4;
+      color: white;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    input[type="number"] {
+      font-size: 14px;
+      width: 60px;
+      margin-right: 10px;
+      text-align: center;
+    }
+
+    #keyWords {
+      text-align: center;
+      color: #0078d4;
+      font-size: 1.3em;
+      margin-bottom: 10px;
+    }
+
+    #english {
+      color: #444;
+    }
+
+    #q {
+      background: #0078d4;
+      color: white;
+      padding: 3px 8px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+
+    .controls {
+      margin-top: 1em;
+      text-align: center;
+    }
+
+    details {
+      margin-top: 0.5em;
+    }
+
+    small {
+      color: #777;
+      font-weight: normal;
+    }
+
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 1em 0;
+      font-size: 0.9em;
+      color: #555;
+    }
+
+    footer span {
+      color: #0078d4;
+      font-weight: bold;
+    }
+
+    section.general.info,
+    section.activity {
+      width: 100%;
+      max-width: 600px;
+      box-sizing: border-box;
+    }
+
+    section.general.info details,
+    section.activity details {
+      display: block;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 10px;
+      background: white;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      margin: 0.5em 0;
+    }
+
+    section.general.info details summary,
+    section.activity details summary {
+      cursor: pointer;
+      font-weight: bold;
+      color: #0078d4;
+      margin-bottom: 10px;
+    }
+
+    section.general.info details summary::-webkit-details-marker,
+    section.activity details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9em;
+    }
+
+    th, td {
+      border: 1px solid #333;
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 0.6em;
+      }
+      #q { font-size: 0.9em; }
+      button { font-size: 18px; padding: 4px 8px; }
+    }
+    #objectives{
+      color: red;
+    }
+    #questionBasedOnAudio{
+      color: blue;
+      text-align: left;
+    }
+    #arabic{
+      direction: rtl;
+      text-align: right;
+    }
+  </style>
+</head>
+
+<body>
+
+
+ 
+  <main>
+    <p  id="instructions"> Instructions: <br>Read the English script. Listen to the audio as many 
+      times as you need. Hide the English version. Show the Arabic version and translate. Show the English version to check your translation.
+      
+    </p>
+    <p><br>Students will be able to:
+      
+    </p>
+    <p id="objectives">
+      Look at the English script. Listen to the audio once or twice.<br> Look at the Arabic version and translate it back into English.
+      
+    </p>
+
+    <p id="speaker"></p>
+    <p id="q"></p>
+    <p id="keyWords"></p>
+
+    <details id="definition">
+      <summary>Definition</summary>
+      <p id="def"></p>
+    </details>
+
+    <details id="illustrations" style="display:none;">
+      <summary>Illustration</summary>
+      <img id="image" alt="Illustration" width="200" height="200" style="display:none;">
+    </details>
+
+    <details id="englishDetails">
+      <summary>Audio Script</summary>
+      <p id="english"></p>
+    </details>
+
+    <details id="arabicDetails">
+      <summary>Arabic</summary>
+      <p id="arabic"></p>
+    </details>
+
+    <!-- Dynamic labels -->
+    <p id="refer_to_container"><strong>Refer to:</strong> <span id="refer_to"></span></p>
+    <p id="back_to_container"><strong>Back to:</strong> <span id="back_to"></span></p>
+
+    <audio id="audio" controls>
+      <source src="" type="audio/mp3" />
+      Your browser does not support the audio element.
+    </audio>
+    <hr>
+
+    <div class="controls">
+      <input type="number" id="audioIndex" min="1" placeholder="#" />
+      <button id="search">&#128269;</button>
+      <button id="prev">&#9664;</button>
+      <button id="next">&#9654;</button>
+      <label>
+        <input type="checkbox" id="autoPlay" checked />
+        Auto play next audio clip
+      </label>
+      <p id="questionBasedOnAudio"></p>
+    </div>
+
+    <div>
+      <details id="answerDetails">
+        <summary>Answer</summary>
+        <p id="answer"></p>
+      </details>
+    </div>
+    <hr>
+
+    <small>💡 Tip: Use ← / → to navigate.</small>
+  </main>
+
+  <footer>
+    <p>Created by <span>Eltayeb Mohamed</span> | <span>© 2025 Eltayeb Mohamed</span>. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const utterance = new SpeechSynthesisUtterance();
+    let currentAudioIndex = 0;
+
+const Sentences = [  
+  // 1
+
+{
+  speaker: `Teacher and 4 Students`,
+  keyWord: ``,
+  definition: ``,
+  english: `Q3eSE_LS0_U01_01_QClassroom`,
+  arabic: `تسجيل الصف`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `Q3eSE_LS0_U01_01_QClassroom.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 2
+{
+  speaker: `Teacher:`,
+  keyWord: ``,
+  definition: ``,
+  english: `Today we are beginning Unit One.`,
+  arabic: `اليوم نبدأ الوحدة الأولى.`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `Today we are beginning Unit One.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 3
+
+{
+  speaker: `Teacher:`,
+  keyWord: ``,
+  definition: ``,
+  english: `Every unit in Q starts with a question.`,
+  arabic: `كل وحدة في Q تبدأ بسؤال.`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `Every unit in Q starts with a question.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 4
+
+{
+  speaker: `Teacher:`,
+  keyWord: ``,
+  definition: ``,
+  english: `We will talk about this question again.`,
+  arabic: `سنتحدث عن هذا السؤال مرة أخرى.`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `We will talk about this question again.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 5
+{
+  speaker: `Teacher:`,
+  keyWord: ``,
+  definition: ``,
+  english: `while we study the unit.`,
+  arabic: `أثناء دراستنا للوحدة.`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `while we study the unit.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 6
+{
+  speaker: `Teacher:`,
+  keyWord: ``,
+  definition: ``,
+  english: `We will talk about this question again while we study the unit.`,
+  arabic: `سنتحدث عن هذا السؤال مرة أخرى أثناء دراستنا للوحدة.`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `We will talk about this question again while we study the unit.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 7
+
+{
+  speaker: `Teacher:`,
+  keyWord: ``,
+  definition: ``,
+  english: `The question for Unit One is:`,
+  arabic: `سؤال الوحدة الأولى هو:`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `The question for Unit One is.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 8
+{
+  speaker: `Teacher:`,
+  keyWord: ``,
+  definition: ``,
+  english: `What are you interested in?`,
+  arabic: `بماذا تهتم؟`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `What are you interested in.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 9
+
+{
+  speaker: `Teacher:`,
+  keyWord: ``,
+  definition: ``,
+  english: `How about you, Yuna?`,
+  arabic: `وماذا عنكِ يا يونا؟`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `How about you, Yuna.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 10
+{
+  speaker: `Teacher:`,
+  keyWord: ``,
+  definition: ``,
+  english: `What are you interested in?`,
+  arabic: `بماذا تهتمين؟`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `What are you interested in.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 11
+{
+  speaker: `Yuna:`,
+  keyWord: ``,
+  definition: ``,
+  english: `I like cooking.`,
+  arabic: `أحب الطبخ.`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `I like cooking.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 12
+{
+  speaker: `Teacher:`,
+  keyWord: ``,
+  definition: ``,
+  english: `OK. Yuna likes cooking`,
+  arabic: `حسنًا. يونا تحب الطبخ.`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `OK Yuna likes cooking.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 13
+{
+  speaker: `Teacher:`,
+  keyWord: ``,
+  definition: ``,
+  english: `How about you, Felix?`,
+  arabic: `وماذا عنك يا فيليكس؟`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `How about you, Felix.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 14
+
+{
+  speaker: `Teacher:`,
+  keyWord: ``,
+  definition: ``,
+  english: `What are you interested in?`,
+  arabic: `بماذا تهتم؟`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `What are you interested in.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 15
+
+{
+  speaker: `Felix:`,
+  keyWord: ``,
+  definition: ``,
+  english: `I’m interested in languages.`,
+  arabic: `أنا مهتم باللغات.`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `I’m interested in languages.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 16
+{
+  speaker: `Felix:`,
+  keyWord: ``,
+  definition: ``,
+  english: `I’m learning French.`,
+  arabic: `أنا أتعلم اللغة الفرنسية.`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `I’m learning French.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 17
+{
+  speaker: `Felix:`,
+  keyWord: ``,
+  definition: ``,
+  english: `I want to learn more languages`,
+  arabic: `أريد أن أتعلم المزيد من اللغات.`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `I want to learn more languages.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 18
+{
+  speaker: `Teacher:`,
+  keyWord: ``,
+  definition: ``,
+  english: `Oh, very good.`,
+  arabic: `آه، ممتاز جدًا.`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `Oh, very good.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 19
+
+{
+  speaker: `Teacher:`,
+  keyWord: ``,
+  definition: ``,
+  english: `Marcus, what are you interested in?`,
+  arabic: `ماركوس، بماذا تهتم؟`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `Marcus, what are you interested in.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 20
+
+{
+  speaker: `Marcus:`,
+  keyWord: ``,
+  definition: ``,
+  english: `Lots of things.`,
+  arabic: `أشياء كثيرة.`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `Lots of things.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 21
+{
+  speaker: `Marcus:`,
+  keyWord: ``,
+  definition: ``,
+  english: `I really like sports.`,
+  arabic: `أنا أحب الرياضة كثيرًا.`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `I really like sports.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 22
+{
+  speaker: `Teacher:`,
+  keyWord: ``,
+  definition: ``,
+  english: `What’s your favorite sport?`,
+  arabic: `ما رياضتك المفضلة؟`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `What’s your favorite sport.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 23
+
+{
+  speaker: `Marcus:`,
+  keyWord: ``,
+  definition: ``,
+  english: `Soccer.`,
+  arabic: `كرة القدم.`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `Soccer.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 24
+
+{
+  speaker: `Marcus:`,
+  keyWord: ``,
+  definition: ``,
+  english: `I play soccer every weekend.`,
+  arabic: `ألعب كرة القدم كل عطلة أسبوع.`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `I play soccer every weekend.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 25
+
+{
+  speaker: `Teacher:`,
+  keyWord: ``,
+  definition: ``,
+  english: `So Felix is learning French.`,
+  arabic: `إذًا فيليكس يتعلم الفرنسية.`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `So Felix is learning French.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 26
+{
+  speaker: `Teacher:`,
+  keyWord: ``,
+  definition: ``,
+  english: `and Marcus plays soccer.`,
+  arabic: `وماركوس يلعب كرة القدم.`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `and Marcus plays soccer.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+
+// 27
+{
+  speaker: `Teacher:`,
+  keyWord: ``,
+  definition: ``,
+  english: `So Felix is learning French and Marcus plays soccer.`,
+  arabic: `إذًا فيليكس يتعلم الفرنسية وماركوس يلعب كرة القدم.`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `So Felix is learning French and Marcus plays soccer.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+
+// 28
+{
+  speaker: `Teacher:`,
+  keyWord: ``,
+  definition: ``,
+  english: `How about you, Sophy?`,
+  arabic: `وماذا عنكِ يا صوفي؟`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `How about you, Sophy.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 29
+{
+  speaker: `Teacher:`,
+  keyWord: ``,
+  definition: ``,
+  english: `What are you interested in?`,
+  arabic: `بماذا تهتمين؟`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `What are you interested in 2.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 30
+
+{
+  speaker: `Sophy:`,
+  keyWord: ``,
+  definition: ``,
+  english: `I like history.`,
+  arabic: `أحب التاريخ.`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `I like history.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 31
+
+{
+  speaker: `Sophy:`,
+  keyWord: ``,
+  definition: ``,
+  english: `I like to go to museums.`,
+  arabic: `أحب الذهاب إلى المتاحف.`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `I like to go to museums.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 32
+{
+  speaker: `Sophy:`,
+  keyWord: ``,
+  definition: ``,
+  english: `and I also like to read.`,
+  arabic: `وأحب أيضًا القراءة.`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `and I also like to read.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 33
+{
+  speaker: `Sophy:`,
+  keyWord: ``,
+  definition: ``,
+  english: `I like to go to museums, and I also like to read.`,
+  arabic: `أحب الذهاب إلى المتاحف، وأحب أيضًا القراءة.`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `I like to go to museums, and I also like to read.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 34
+{
+  speaker: `Teacher:`,
+  keyWord: ``,
+  definition: ``,
+  english: `So you all have different hobbies and interests.`,
+  arabic: `إذًا لديكم جميعًا هوايات واهتمامات مختلفة.`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `So you all have different hobbies and interests.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+// 35
+
+{
+  speaker: `Teacher:`,
+  keyWord: ``,
+  definition: ``,
+  english: `we will talk about them more as we complete unit 1.`,
+  arabic: `سنتحدث عنها أكثر عندما نكمل الوحدة الأولى.`,
+  refer_to: ``,
+  back_to: ``,
+  audio: `we will talk about them more as we complete unit 1.mp3`,
+  audioQuestion: `
+1. What unit are the students starting?<br>
+2. What is the unit question?<br>
+3. Who likes cooking?<br>
+4. What is Felix interested in?<br>
+5. What language is Felix learning?<br>
+6. What sport does Marcus like?<br>
+7. When does Marcus play soccer?<br>
+8. What does Sophy like?<br>
+9. Where does Sophy like to go?<br>
+10. Do the students have the same interests or different interests?
+`,
+  answer: ``,
+  Image:`.jpg`
+},
+];
+  
+    const q = document.getElementById("q");
+    const refer_to = document.getElementById("refer_to");
+    const back_to = document.getElementById("back_to");
+    const speaker = document.getElementById("speaker");
+    const keyWords = document.getElementById("keyWords");
+    const def = document.getElementById("def");
+    const english = document.getElementById("english");
+    const arabic = document.getElementById("arabic");
+    const audio = document.getElementById("audio");
+    const image = document.getElementById("image");
+    const illustrationDetails = document.getElementById("illustrations");
+    const questionBasedOnAudio = document.getElementById("questionBasedOnAudio");
+    const audioIndexInput = document.getElementById("audioIndex");
+    const autoPlayCheckbox = document.getElementById("autoPlay");
+
+    const definitionDetails = document.getElementById("definition");
+    const englishDetails = document.getElementById("englishDetails");
+    const arabicDetails = document.getElementById("arabicDetails");
+    const answer = document.getElementById("answer");
+    const answerDetails = document.getElementById("answerDetails");
+    const prevBtn = document.getElementById("prev");
+    const nextBtn = document.getElementById("next");
+
+    function updateButtonState() {
+      prevBtn.disabled = currentAudioIndex === 0;
+      nextBtn.disabled = currentAudioIndex === Sentences.length - 1;
+    }
+
+    function displayData() {
+      const s = Sentences[currentAudioIndex];
+
+      q.textContent = `${currentAudioIndex + 1}/${Sentences.length}`;
+      refer_to.textContent = s.refer_to || "";
+      back_to.textContent = s.back_to || "";
+
+      // Toggle label visibility
+      const referToContainer = document.getElementById("refer_to_container");
+      const backToContainer = document.getElementById("back_to_container");
+      referToContainer.style.display = s.refer_to?.trim() ? "block" : "none";
+      backToContainer.style.display = s.back_to?.trim() ? "block" : "none";
+
+      keyWords.textContent = s.keyWord || "";
+      speaker.textContent = s.speaker || "";
+      def.textContent = s.definition || "";
+      english.textContent = s.english || "";
+      arabic.textContent = s.arabic || "";
+      audio.src = s.audio || "";
+      answer.textContent = s.answer || "";
+      questionBasedOnAudio.innerHTML = s.audioQuestion || "";
+
+      // Show or hide detail sections
+      answerDetails.style.display = s.answer?.trim() ? "block" : "none";
+      definitionDetails.style.display = s.definition?.trim() ? "block" : "none";
+      englishDetails.style.display = s.english?.trim() ? "block" : "none";
+      arabicDetails.style.display = s.arabic?.trim() ? "block" : "none";
+
+      // ✅ Always show image if source exists
+      if (s.Image && s.Image.trim() !== "" && s.Image !== ".jpg") {
+        image.src = s.Image;
+        image.style.display = "block";
+        illustrationDetails.style.display = "block";
+      } else {
+        image.removeAttribute("src");
+        image.style.display = "none";
+        illustrationDetails.style.display = "none";
+      }
+
+      updateButtonState();
+    }
+
+    function resetDetails() {
+      definitionDetails.open = false;
+      englishDetails.open = false;
+     arabicDetails.open = false;
+      answerDetails.open = false;
+    }
+
+    function nextSentence() {
+      if (currentAudioIndex < Sentences.length - 1) {
+        currentAudioIndex++;
+        displayData();
+        resetDetails();
+        if (autoPlayCheckbox.checked) audio.play().catch(() => {});
+      }
+    }
+
+    function prevSentence() {
+      if (currentAudioIndex > 0) {
+        currentAudioIndex--;
+        displayData();
+        resetDetails();
+        if (autoPlayCheckbox.checked) audio.play().catch(() => {});
+      }
+    }
+
+    nextBtn.addEventListener("click", nextSentence);
+    prevBtn.addEventListener("click", prevSentence);
+
+    document.getElementById("search").addEventListener("click", () => {
+      const index = parseInt(audioIndexInput.value, 10) - 1;
+      if (index >= 0 && index < Sentences.length) {
+        currentAudioIndex = index;
+        displayData();
+      } else {
+        alert(`Enter a number between 1 and ${Sentences.length}`);
+      }
+    });
+
+    audioIndexInput.addEventListener("keydown", e => {
+      if (e.key === "Enter") document.getElementById("search").click();
+    });
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "ArrowRight") nextSentence();
+      if (e.key === "ArrowLeft") prevSentence();
+    });
+
+    displayData();
+  </script>
+</body>
+</html>
